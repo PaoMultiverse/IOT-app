@@ -2,15 +2,14 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+const connectDB = require("./configs/db");
 
+dotenv.config();
 // Khởi tạo ứng dụng Express
 const app = express();
-
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
+// Kết nối database
+connectDB();
 // Route cơ bản
 app.get("/", (req, res) => {
   res.send("Welcome to the Node.js Express Server!");
@@ -35,6 +34,12 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something went wrong!");
 });
+
+//Routers
+const authRoutes = require("./routes/auth.route");
+
+// Api
+app.use("/api/auth", authRoutes);
 
 // Server lắng nghe kết nối
 const PORT = process.env.PORT || 3000;
